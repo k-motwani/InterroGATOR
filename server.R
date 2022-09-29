@@ -8,7 +8,9 @@
 
 # Creating and hiding calculations for posterior analyses
 
-# This is a Shiny application for conducting differential expression and Spatial analyses on different cell types in different human tissues. This application allows the user to analyze cell expression profiles from CITEseq and CODEX data previously integrated.
+# This is a Shiny application for conducting differential expression and Spatial analyses on different cell types 
+# in different human tissues. This application allows the user to analyze cell expression profiles from CITEseq 
+# and CODEX data previously integrated.
 
 
 #############################################
@@ -122,7 +124,6 @@ shinyServer(function(input, output, session) {
         #######   Piece to save table4
         if ( isFALSE(file_test("-f", FileLocation())) ) {
           print ("Calculating infotable4")
-
           
           v1<-rownames(infotable2()@transfer_matrix)
           divisor=2000
@@ -149,7 +150,6 @@ shinyServer(function(input, output, session) {
               allv2<-c(allv2,vecv2)
               allv3<-c(allv3,vectito)
               allv4<-c(allv4,elmax) # maximos
-
             } else {
               tabelita<-infotable2()@transfer_matrix[vector_of_pieces[count]:(vector_of_pieces[count+1]),]
               vectito <-colnames(tabelita)[apply(tabelita,1,which.max)]
@@ -184,7 +184,7 @@ shinyServer(function(input, output, session) {
           tab3<-tab3[order(tab3$CODEXname),]
           pretab4<-cbind(infotable2()@codex_spatial,codex_clusters = infotable2()@codex_clusters)
           tab4<-merge(tab3,pretab4, by.x = "CODEXname",by.y=0, all.y = TRUE)
-          
+
           if ("predicted.celltype.l2" %in% colnames(tab4)) {
             print("predicted.celltype.l2 is present in the data")
             tab4$predicted.celltype.l2[is.na(tab4$predicted.celltype.l2)] = "Unknown"
@@ -255,7 +255,7 @@ shinyServer(function(input, output, session) {
           print (tail(infotable4()))
           print ("infotable4 was retreived from previous calculations")
         }
-
+        
         #######
         x_tmp <- infotable4()[, "x"]
         x_tmp <- x_tmp - min(x_tmp)
@@ -269,12 +269,13 @@ shinyServer(function(input, output, session) {
         idx<- which (coloring_choicestab4 %in% toremove)
         
         coloring_choicestab4<-coloring_choicestab4[-idx]
-       
+
         var_to_highlightAdjacencybyCluster <- coloring_choicestab4
         updateSelectizeInput(session,inputId="selectclusteringtype", choices = var_to_highlightAdjacencybyCluster, options = list(maxItems = 1),selected=var_to_highlightAdjacencybyCluster[1] ) 
         updateSelectizeInput(session,inputId="selectclusteringtypeUMAPclusters", choices = var_to_highlightAdjacencybyCluster, options = list(maxItems = 1),selected=var_to_highlightAdjacencybyCluster[1] ) 
         print("input$selectclusteringtype")
         print(input$selectclusteringtype)
+
         updateSelectInput(session, inputId = "cluster1", choices = coloring_choicestab4 ) # This is brother of this in UI. If this is on, the piece in UI has to be on as well
         updateSelectInput(session, inputId = "cluster2", choices = coloring_choicestab4 ) # This is brother of this in UI. If this is on, the piece in UI has to be on as well
         updateSelectInput(session, inputId = "clusterSpatialExpression", choices = coloring_choicestab4 ) # This is brother of this in UI. If this is on, the piece in UI has to be on as well
@@ -283,11 +284,8 @@ shinyServer(function(input, output, session) {
        
       })
     
-    
-       
     ######
     # Creating a unique name to save tab4data
-    
     observeEvent({
       input$file2
     }, {
@@ -376,6 +374,7 @@ shinyServer(function(input, output, session) {
       tabproportions (tab)
       cite_embpiece<-infotable2()@cite_emb[rownames(infotable2()@cite_emb) %in% rownames(infotable3()), ]
       head(cite_embpiece)
+
       dim(cite_embpiece)
       
       
@@ -410,8 +409,7 @@ shinyServer(function(input, output, session) {
     
     output$tproportions<- DT::renderDT({
       tabproportions()
-    })# Closing the datatable of proportions of classification categories
-    
+    }) # Closing the datatable of proportions of classification categories
     
     
     ######################
@@ -420,7 +418,6 @@ shinyServer(function(input, output, session) {
     #####################
     infotableumapind<- reactiveVal(NULL);
     Subsetinfotableumapind<- reactiveVal(NULL);
-    
     
     observeEvent({
       input$clusterUMAPIndSamples
@@ -444,14 +441,12 @@ shinyServer(function(input, output, session) {
       input$ploteaumapindsamples}, {
         req( input$Umapstoplot)
         req(input$RetainSubset2)
-        
         colors <- randomcoloR::distinctColorPalette(length(unique(infotableumapind()$clusters)))       
         Subsetinfotableumapind (infotableumapind()[infotableumapind()$assay_name == input$Umapstoplot,] )
         print("dim (Subsetinfotableumapind)")
         print (dim(Subsetinfotableumapind()))
         seurat_clusters<-Subsetinfotableumapind()$clusters
-        
-        
+
 
         output$p5<- renderPlot({
           #browser()
@@ -609,7 +604,7 @@ shinyServer(function(input, output, session) {
         } else {
           infotab4_tmp(infotable4())
         }
-        
+       
         
         
         output$p3<- renderPlot({
@@ -773,8 +768,8 @@ shinyServer(function(input, output, session) {
         
         var_to_highlight2<- sort(unique (infotable4()[,input$cluster2]))
         updateSelectInput(session, inputId = "clusterincolor", choices = var_to_highlight2 )
-        
-        
+
+
       })
 
     observeEvent({
@@ -819,7 +814,7 @@ shinyServer(function(input, output, session) {
           df<-df[order(df$condition2),]
           infotable4(df)
           rm(df)
-
+          
         } else if(input$RetainSubset5 == "Inverse") {
           df <- infotab4_tmp()
           losin<-outersect(df$CODEXname,Tab4piece2()$CODEXname)
@@ -843,6 +838,7 @@ shinyServer(function(input, output, session) {
         info_spatial_tmpindep(df)
         rm(df)
         
+
         colorsindep <- randomcoloR::distinctColorPalette(length(unique(infotable4()[,input$cluster2]))) #This is new
         vecofcols<-c( "#4FAFB7", "#8034E4", "#ADB56F", "#6C84EC", "#E6B93F", "#ffdc00",
                       "#65AD8E", "#F19D38","#EB5428", "#DAE650","#7E8C8E", "#F5E4B2","#DC4CA7",
@@ -903,11 +899,11 @@ shinyServer(function(input, output, session) {
         req(input$colbyDE)
         req(infotable3())
         req(infotable4())
+
         #browser()
         var_to_highlightDE<- sort(unique (infotable3()[,input$colbyDE]))
         #var_to_highlightDE<- sort(unique (infotable4()[,input$colbyDE]))
         updateSelectizeInput(inputId="selectDE", choices = var_to_highlightDE, options = list(maxItems = 2))
-        
       })
     
     observeEvent({
@@ -940,6 +936,7 @@ shinyServer(function(input, output, session) {
           print("datadeg()$DE")
           print(datadeg()$DE)
         })# Closing the datatable
+
         datadegwithNonDE <- reactiveVal(NULL)
         #browser()
         datatouseinDEpart2(datadeg()$DE)
@@ -1163,7 +1160,7 @@ shinyServer(function(input, output, session) {
 
     ######################
     
-    ## Spatial Expression (CODEX spatial analysis)
+   ## Spatial Expression (CODEX spatial analysis)
     #####################
    #browser()
     observeEvent({

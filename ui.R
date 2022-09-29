@@ -1,3 +1,4 @@
+# This is the Beta version
 #############################################
 ########     InterroGATOR_ui.R     ##########
 #############################################
@@ -6,9 +7,9 @@
 # Created: October/19/2021
 # Last update: September/20/2022
 
-# Creating and hiding calculations for posterior analyses
-
-# This is a Shiny application for conducting differential expression and Spatial analyses on different cell types in different human tissues. This application allows the user to analyze cell expression profiles from CITEseq and CODEX data previously integrated.
+# This is a Shiny application for conducting differential expression and Spatial analyses on different cell types in different 
+# human tissues. This application allows the user to analyze cell expression profiles from CITEseq and CODEX 
+# data previously integrated.
 
 
 #############################################
@@ -64,6 +65,8 @@ shinyUI(
           conditionalPanel("input.sidebarmenu === 'fileupload'",
           fluidPage(
               fileInput("file1", label = h4("Insert Seurat rds file")),
+
+              fileInput("file2", label = h4("Insert RData object")),
               
               fileInput("file2", label = h4("Insert RData object")),
               
@@ -119,7 +122,7 @@ shinyUI(
               radioButtons(inputId="RetainSubset3", label="Subset?", choices= list("Area","Inverse", "All"), selected = "All")
             ),
             actionButton("ploteaCITEIndep", "Plot")
-                           ) # Closing fluidPage of CITE independent Tab  
+            ) # Closing fluidPage of CITE independent Tab  
           ), # Closing conditionalPanel of CITE independent Tab
           
           # CITEtoCODEXspatial extrapolation tab
@@ -190,22 +193,21 @@ shinyUI(
           # DE Heatmap, Ridge and Violin plots
           menuItem("DE analysis 2", tabName = "DEHeatmapRidgeandViolin", icon = icon("code-branch")) ,
           conditionalPanel("input.sidebarmenu === 'DEHeatmapRidgeandViolin'",
-                           fluidPage(
-                             
-                             radioButtons(
-                               inputId="allorsomefeatures",
-                               label="Select all or some features for Heatmap",
-                               choices=list(
+              fluidPage(
+                  radioButtons(
+                       inputId="allorsomefeatures",
+                       label="Select all or some features for Heatmap",
+                       choices=list(
                                  "All",
                                  "Manual Selection"
-                               ),
-                               selected="All"),
+                       ),
+                       selected="All"),
                              
-                             conditionalPanel(
-                               condition = "input.allorsomefeatures != 'All'",
-                               selectizeInput(inputId="selectfeaturesforheatmap", label="Select Features for Heatmap", choices = list() , multiple = TRUE ) ),
+                       conditionalPanel(
+                           condition = "input.allorsomefeatures != 'All'",
+                           selectizeInput(inputId="selectfeaturesforheatmap", label="Select Features for Heatmap", choices = list() , multiple = TRUE ) ),
                              
-                             radioButtons(
+                           radioButtons(
                                inputId="allorsomeGroups",
                                label="Select all or some categories for Heatmap",
                                choices=list(
@@ -213,11 +215,10 @@ shinyUI(
                                  "Manual Selection"
                                ),
                                selected="All"),
-                             
                              conditionalPanel(
                                condition = "input.allorsomeGroups != 'All'",
                                selectizeInput(inputId="selectgroupsforheatmap", label="Select categories for Heatmap", choices = list(), multiple = TRUE )
-                             ),
+                           ),
                              selectizeInput(inputId="selectgroupsorder", label="Sort categories as desired", choices = list(), multiple = TRUE ),
                              numericInput(inputId="cellnumber",label = "Number of Cells to plot", value = 10,min = 10,max=300,step = 1),
                              numericInput(inputId="lowerbreak",label = "Lower Break", value = -5,min = -100,max=100,step = 1),
@@ -307,7 +308,7 @@ shinyUI(
                            ) # Closing fluidPage of CODEX independent Tab  
           ), # Closing conditionalPanel of CODEX independent Tab
           
-          
+
           # CODEX Adjacency analysis by feature
           menuItem("Adjacency analysis by feature", tabName = "AdjacencybyFeature", icon = icon("code-branch")) ,
           conditionalPanel("input.sidebarmenu === 'AdjacencybyFeature'",
@@ -444,9 +445,7 @@ shinyUI(
                 fluidRow(plotOutput ("p20", height = 1000), style =  "width: 95%"
                 ) #Closing the fluid Row of CITE independent
         ), # Closing tabItem of CITE independent     
-        
-        
-        
+                
         tabItem(tabName = "AdjacencybyFeature",
                         fluidRow(plotOutput ("p15", height = 1000), style =  "width: 95%"
                         ), #Closing the fluid Row of the adjacency heatmap by feature
